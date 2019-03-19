@@ -19,7 +19,7 @@
             android:background="@color/colorPrimaryDark"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@drawable/addPhoto"
+            android:src="@drawable/addphoto"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             />
