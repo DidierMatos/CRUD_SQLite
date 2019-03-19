@@ -1,6 +1,7 @@
 package com.ndevelopers.crud_sqlite;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
@@ -74,6 +75,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor getData(String sql){
+        SQLiteDatabase database = getReadableDatabase();
+
+        return database.rawQuery(sql, null);
+    }
 
 
 }
