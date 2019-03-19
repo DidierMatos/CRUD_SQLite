@@ -3,7 +3,9 @@ package com.ndevelopers.crud_sqlite;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,6 +94,32 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK){
+            Uri imageUri = data.getData();
+            CropImage.activity(imageUri)
+                    .setGuidelines(CropImageView.Guidelines.ON) //enable image guideLines
+                    .setAspectRatio(1,1) //image will be square
+                    .start(this);
+        }
+
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK){
+                Uri resultUri = result.getUri();
+                //set image choosed from gallery to image view
+                mImageView.setImageURI(resultUri);
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                Exception error = result.getError();
+            }
+        }
+
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
 
