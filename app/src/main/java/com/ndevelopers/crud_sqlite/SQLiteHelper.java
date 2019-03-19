@@ -1,0 +1,65 @@
+package com.ndevelopers.crud_sqlite;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
+
+public class SQLiteHelper extends SQLiteOpenHelper {
+
+    //constructor
+    SQLiteHelper(Context context,
+                 String name,
+                 SQLiteDatabase.CursorFactory factory,
+                 int version){
+        super(context, name, factory, version);
+    }
+
+    public void queryData(String sql){
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL(sql);
+
+    }
+
+    //insertData
+    public void insertData(String name, String age, String phone, byte[] image){
+        SQLiteDatabase database = getWritableDatabase();
+
+        //query to insert record in database table
+        String sql = "INSERT INTO RECORD VALUES(NULL, ?, ?, ?, ?)"; //where "RECORD" is table name in database we will create
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, name);
+        statement.bindString(2, age);
+        statement.bindString(3, phone);
+        statement.bindBlob(4, image);
+
+        statement.executeInsert();
+
+
+    }
+
+    //updateData
+
+    public void updateData(String name, String age, String phone, byte[] image, int id){
+        SQLiteDatabase database = getWritableDatabase();
+        //query to update record
+        String sql = "UPDATE RECORD SET name=?, phone=?, image=? WHERE id=?";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+
+        statement.bindString(1, name);
+        statement.bindString(2, age);
+        statement.bindString(3, phone);
+        statement.bindBlob(4, image);
+        statement.bindDouble(5, (double) id);
+
+        statement.executeInsert();
+        database.close();
+    }
+
+
+
+
+}
