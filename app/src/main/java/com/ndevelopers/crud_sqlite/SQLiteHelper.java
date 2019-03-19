@@ -67,7 +67,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         //query to delete record using id
         String sql = "DELETE FROM RECORD WHERE id=?";
 
-        SQLiteStatement statement = database. compileStatement(Sql);
+        SQLiteStatement statement = database. compileStatement(sql);
         statement.clearBindings();
         statement.bindDouble(1,(double)id);
         statement.execute();

@@ -3,6 +3,9 @@ package com.ndevelopers.crud_sqlite;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText mEdtName, mEdtAge, mEdtPhone;
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView mImageView;
 
     final int REQUEST_CODE_GALLERY = 999;
+
+    public static SQLiteHelper mSQLiteHelper;
 
 
     @Override
@@ -38,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
         mBtnAdd = findViewById(R.id.btnAdd);
         mBtnList = findViewById(R.id.btnList);
         mImageView = findViewById(R.id.imageView);
+
+        //creating database
+
+        mSQLiteHelper = new SQLiteHelper(this, "RECORDDB.sqlite", null, 1);
+
+        //creating table database
+
+        mSQLiteHelper.queryData("CREATE TABLE IF NOT EXISTS RECORD(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, age VARCHAR, phone VARCHAR, image BLOB)");
+
 
         //select image by on image click
 
@@ -60,9 +76,28 @@ public class MainActivity extends AppCompatActivity {
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //code later
+                try {
+                    mSQLiteHelper.insertData(
+                            mEdtName.getText().toString().trim(),
+                            mEdtAge.getText().toString().trim(),
+                            mEdtPhone.getText().toString().trim(),
+                            imageViewToByte(mImageView)
+                    );
+
+                    Toast.makeText(MainActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
+                    mEdtName.setText("");
+                    mEdtAge.setText("");
+                    mEdtPhone.setText("");
+                    mImageView.setImageResource(R.drawable.addphoto);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
             }
         });
+
 
         //show record list
 
@@ -75,6 +110,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+    }
+
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100,stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
 
     }
 
