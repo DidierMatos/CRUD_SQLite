@@ -16,6 +16,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
     public void queryData(String sql){
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL(sql);
